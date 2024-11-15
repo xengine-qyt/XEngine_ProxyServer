@@ -73,9 +73,9 @@ jobs:
 
       - name: Generate release notes
         run: |
-          logs=$(git log ${{ steps.versioning.outputs.prev_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %H - %s - %an" --no-merges)
-          release_notes=$(echo "$logs" | sed 's/ qyt$/ @xengine-qyt/')
+          logs=$(git log ${{ steps.versioning.outputs.prev_tag }}..${{ steps.versioning.outputs.new_tag }} --pretty=format:"* %h - %s - %cn - %cd" --no-merges)
           echo "$release_notes"
+          echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
           echo "$release_notes" > release_notes.txt
         
       - name: Release
@@ -86,7 +86,7 @@ jobs:
           draft: false
           prerelease: false
           tag_name: ${{ steps.versioning.outputs.new_tag }}
-          name: XEngine_ProxyServiceApp ${{ steps.versioning.outputs.new_tag }}
+          name: XEngine_ProxyServiceApp ${{ steps.versioning.outputs.new_tag }} Build${{ env.DATE }}
           body_path: release_notes.txt
           files: |
             ./XEngine_ProxyServiceApp-x64-Mac.zip
